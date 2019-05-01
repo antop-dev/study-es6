@@ -1,0 +1,20 @@
+mixin tree (items, dir)
+    ul
+        each item in items
+            li
+                if item.type === 'directory'
+                    = item.name
+                    +tree(item.children, `${dir}/${item.name}`)
+                else
+                    a(href=`${dir}/${item.name}`)= item.name
+
+doctype html
+html
+    head(lang='ko')
+        meta(charset='utf-8')
+        title Study ES6
+        link(rel='stylesheet', href='bootstrap.min.css')
+        style
+            include index.css
+    body(class='mt-3')
+        +tree(items, '')

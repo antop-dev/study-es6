@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/nanum-gothic-coding.css"/>
+    <link rel="stylesheet" href="/css/prism.css"/>
+    <link rel="stylesheet" href="/css/style.css"/>
+    <link rel="stylesheet" href="/css/github-markdown.css"/>
+
+    <script type="text/javascript" src="/js/clipboard.min.js"></script>
+    <script type="text/javascript" src="/js/prism.js"></script>
+    <script type="text/javascript" src="/js/axios.min.js"></script>
+    <script type="text/javascript" src="/js/showdown.min.js"></script>
+</head>
+<body>
+
+<div class="m-3">
+    <div id="markdown" class="markdown-body" data-src="<%= htmlWebpackPlugin.options.title %>.md"></div>
+
+    <h5 class="mt-4">ECMAScript 6</h5>
+    <pre data-src="<%= htmlWebpackPlugin.options.title %>.js"></pre>
+
+    <h5 class="mt-4">ECMAScript 5 (by Babel)</h5>
+    <pre data-src="<%= htmlWebpackPlugin.options.title %>.es5.js"></pre>
+</div>
+
+<script>
+    var converter = new showdown.Converter();
+
+    document.querySelectorAll('#markdown[data-src]').forEach(function (html) {
+        var src = html.getAttribute('data-src');
+
+        axios.get(src)
+            .then(function (response) {
+                html.innerHTML = converter.makeHtml(response.data);
+            })
+            .catch(function (error) {
+                html.innerHTML = error.response.status + ' - ' + error.response.statusText
+                    + ' (' + error.config.url + ')';
+                ;
+            });
+
+    });
+</script>
+
+</body>
+</html>
